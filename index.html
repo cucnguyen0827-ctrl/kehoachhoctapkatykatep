@@ -643,6 +643,10 @@ function defaultData(childId) {
 }
 
 function normalizeData(parsed) {
+  parsed = parsed || {};
+  if (!Array.isArray(parsed.homework)) parsed.homework = [];
+  if (!Array.isArray(parsed.weekly)) parsed.weekly = [];
+  if (!Array.isArray(parsed.exams)) parsed.exams = [];
   if (!Array.isArray(parsed.dailyTasks)) parsed.dailyTasks = [];
   if (!Array.isArray(parsed.rewards)) parsed.rewards = defaultRewards();
   if (!Array.isArray(parsed.redemptions)) parsed.redemptions = [];
