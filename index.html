@@ -31,6 +31,7 @@
       var(--paper);
     color: var(--ink);
     font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 16px;
     min-height: 100vh;
     padding: 18px 14px 60px;
   }
@@ -44,19 +45,20 @@
     gap: 12px;
     margin-bottom: 16px;
     padding-bottom: 10px;
-    border-bottom: 2px solid var(--ink);
+    border-bottom: 3px solid var(--ink);
   }
 
   h1 {
     font-family: 'Baloo 2', sans-serif;
-    font-weight: 700;
-    font-size: 22px;
+    font-weight: 800;
+    font-size: 28px;
     margin: 0;
     letter-spacing: 0.2px;
   }
 
   .today-date {
-    font-size: 13px;
+    font-size: 15px;
+    font-weight: 600;
     color: var(--ink-soft);
     white-space: nowrap;
   }
@@ -70,14 +72,14 @@
 
   .child-tab {
     flex: 1;
-    border: 2px solid var(--ink);
+    border: 3px solid var(--ink);
     border-bottom: none;
-    border-radius: 10px 10px 0 0;
-    padding: 10px 8px 8px;
+    border-radius: 14px 14px 0 0;
+    padding: 12px 8px 10px;
     background: var(--card-bg);
     font-family: 'Baloo 2', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
     color: var(--ink-soft);
     cursor: pointer;
     text-align: center;
@@ -96,10 +98,10 @@
   .child-tab .grade {
     display: block;
     font-family: 'Be Vietnam Pro', sans-serif;
-    font-weight: 400;
-    font-size: 11px;
+    font-weight: 600;
+    font-size: 14px;
     color: var(--ink-soft);
-    margin-top: 1px;
+    margin-top: 2px;
   }
 
   .rename-btn {
@@ -115,60 +117,65 @@
   }
 
   .board {
-    border: 2px solid var(--accent-dark);
-    border-radius: 0 10px 10px 10px;
+    border: 3px solid var(--accent-dark);
+    border-radius: 0 14px 14px 14px;
     background: var(--card-bg);
-    padding: 14px 14px 16px;
+    padding: 16px 14px 18px;
   }
 
   /* Section nav */
   .section-nav {
     display: flex;
     gap: 6px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
 
   .section-btn {
     flex: 1;
-    border: 1.5px solid var(--paper-line);
-    background: transparent;
+    border: none;
+    background: var(--tab-tint, #fff);
+    color: var(--tab-solid, var(--ink-soft));
     border-radius: 999px;
-    padding: 7px 6px;
-    font-family: 'Be Vietnam Pro', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-soft);
+    padding: 11px 6px;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
+    box-shadow: 0 3px 0 var(--tab-tint-shadow, transparent);
   }
 
   .section-btn.active {
-    background: var(--accent);
-    border-color: var(--accent-dark);
+    background: var(--tab-solid);
     color: #fff;
+    box-shadow: 0 4px 0 var(--tab-dark);
+    transform: translateY(-1px);
   }
 
   .section-block {
-    background: var(--block-bg, #fff);
-    border: 1.5px solid var(--block-border, var(--paper-line));
-    border-radius: 10px;
-    padding: 12px 14px 14px;
-    margin-bottom: 14px;
+    background: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 0 14px 14px;
+    margin-bottom: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 0 var(--block-shadow, #ddd8c8), 0 5px 14px rgba(0,0,0,0.08);
   }
 
   h2.section-title {
     font-family: 'Baloo 2', sans-serif;
-    font-size: 16px;
-    margin: 0 0 10px;
-    padding-bottom: 8px;
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0 -14px 12px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    border-bottom: 2px solid var(--block-border, var(--accent-tint));
-    color: var(--block-ink, var(--accent-dark));
+    gap: 8px;
+    background: var(--block-bg, var(--accent));
+    color: #fff;
   }
 
   .empty-note {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--ink-soft);
     font-style: italic;
     padding: 10px 0;
@@ -186,17 +193,18 @@
   .item-row:last-child { border-bottom: none; }
 
   .check {
-    width: 26px;
-    height: 26px;
-    min-width: 26px;
-    border-radius: 7px;
-    border: 2px solid var(--accent-dark);
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 9px;
+    border: 3px solid var(--accent-dark);
     background: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: 20px;
+    font-weight: 800;
     color: transparent;
     flex-shrink: 0;
   }
@@ -210,25 +218,25 @@
   .item-text { flex: 1; min-width: 0; }
 
   .item-title {
-    font-weight: 600;
-    font-size: 14.5px;
-    line-height: 1.35;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.4;
     white-space: pre-line;
   }
 
   .item-title.done { text-decoration: line-through; color: var(--ink-soft); }
 
   .item-meta {
-    font-size: 12.5px;
+    font-size: 14px;
     color: var(--ink-soft);
-    margin-top: 1px;
+    margin-top: 2px;
   }
 
   .tag {
     display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 1px 7px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 10px;
     border-radius: 999px;
     background: var(--accent-tint);
     color: var(--accent-dark);
@@ -242,10 +250,10 @@
     border: none;
     background: none;
     color: var(--ink-soft);
-    font-size: 17px;
+    font-size: 21px;
     line-height: 1;
     cursor: pointer;
-    padding: 2px 4px;
+    padding: 4px 6px;
     flex-shrink: 0;
   }
 
@@ -253,10 +261,10 @@
     border: none;
     background: none;
     color: var(--accent-dark);
-    font-size: 15px;
+    font-size: 19px;
     line-height: 1;
     cursor: pointer;
-    padding: 2px 4px;
+    padding: 4px 6px;
     flex-shrink: 0;
   }
 
@@ -269,9 +277,9 @@
   }
 
   .countdown {
-    font-size: 12px;
-    font-weight: 700;
-    padding: 2px 8px;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 4px 10px;
     border-radius: 999px;
     white-space: nowrap;
     flex-shrink: 0;
@@ -281,66 +289,66 @@
   .countdown.past { background: #eee; color: var(--ink-soft); }
 
   /* Week grid */
-  .week-day-group { margin-bottom: 10px; }
+  .week-day-group { margin-bottom: 12px; }
   .week-day-label {
     font-family: 'Baloo 2', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 17px;
+    font-weight: 700;
     color: var(--accent-dark);
-    margin-bottom: 4px;
-    padding-top: 6px;
-    border-top: 1px solid var(--paper-line);
+    margin-bottom: 6px;
+    padding-top: 8px;
+    border-top: 2px solid var(--paper-line);
   }
   .week-day-group:first-child .week-day-label { border-top: none; padding-top: 0; }
 
   /* Add button + form */
   .add-btn {
     width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    border: 2px dashed var(--accent-dark);
-    border-radius: 8px;
+    margin-top: 12px;
+    padding: 13px;
+    border: 3px dashed var(--accent-dark);
+    border-radius: 10px;
     background: transparent;
     color: var(--accent-dark);
     font-weight: 700;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
     font-family: 'Be Vietnam Pro', sans-serif;
   }
 
   .add-form {
-    margin-top: 10px;
-    padding: 12px;
+    margin-top: 12px;
+    padding: 14px;
     background: var(--accent-tint);
-    border-radius: 8px;
+    border-radius: 10px;
     display: none;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
 
   .add-form.open { display: flex; }
 
   .add-form label {
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
     color: var(--ink-soft);
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
 
   .add-form input, .add-form select, .add-form textarea {
     width: 100%;
-    padding: 8px 9px;
-    border: 1.5px solid var(--paper-line);
-    border-radius: 6px;
+    padding: 10px 11px;
+    border: 2px solid var(--paper-line);
+    border-radius: 8px;
     font-family: 'Be Vietnam Pro', sans-serif;
-    font-size: 14px;
+    font-size: 16px;
     background: #fff;
   }
 
   .add-form textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 64px;
     line-height: 1.4;
   }
 
@@ -355,13 +363,13 @@
 
   .btn-primary, .btn-ghost {
     flex: 1;
-    padding: 9px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 13.5px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 16px;
     cursor: pointer;
     font-family: 'Be Vietnam Pro', sans-serif;
-    border: 1.5px solid transparent;
+    border: 2px solid transparent;
   }
 
   .btn-primary { background: var(--accent-dark); color: #fff; }
@@ -369,53 +377,56 @@
 
   .hint {
     text-align: center;
-    font-size: 11.5px;
+    font-size: 13px;
     color: var(--ink-soft);
     margin-top: 16px;
   }
 
   .points-banner {
-    background: linear-gradient(135deg, var(--accent-tint), #fff);
-    border: 2px solid var(--accent-dark);
-    border-radius: 10px;
-    padding: 14px;
+    background: linear-gradient(135deg, #8B5CF0, #6C63D6);
+    border: none;
+    border-radius: 16px;
+    padding: 18px;
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 0 #4e46a8, 0 5px 14px rgba(0,0,0,0.1);
   }
 
   .points-balance {
     font-family: 'Baloo 2', sans-serif;
-    font-size: 34px;
-    font-weight: 700;
-    color: var(--accent-dark);
+    font-size: 40px;
+    font-weight: 800;
+    color: #fff;
     line-height: 1.1;
   }
 
   .points-sub {
-    font-size: 12px;
-    color: var(--ink-soft);
-    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    opacity: 0.9;
+    margin-top: 5px;
   }
 
   .reward-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 4px;
-    border-bottom: 1px dashed var(--paper-line);
+    padding: 12px 4px;
+    border-bottom: 2px dashed var(--paper-line);
   }
 
   .reward-row:last-child { border-bottom: none; }
 
-  .reward-name { font-weight: 600; font-size: 14px; flex: 1; }
-  .reward-cost { font-size: 12.5px; color: var(--ink-soft); }
+  .reward-name { font-weight: 700; font-size: 16px; flex: 1; }
+  .reward-cost { font-size: 14px; color: var(--ink-soft); font-weight: 600; }
 
   .btn-redeem {
     border: none;
     border-radius: 999px;
-    padding: 7px 14px;
-    font-weight: 700;
-    font-size: 13px;
+    padding: 9px 16px;
+    font-weight: 800;
+    font-size: 14px;
     background: var(--accent-dark);
     color: #fff;
     cursor: pointer;
@@ -432,9 +443,9 @@
   .history-item {
     display: flex;
     justify-content: space-between;
-    font-size: 12.5px;
+    font-size: 14px;
     color: var(--ink-soft);
-    padding: 6px 4px;
+    padding: 7px 4px;
     border-bottom: 1px dashed var(--paper-line);
   }
   .history-item:last-child { border-bottom: none; }
@@ -451,10 +462,10 @@
   <div class="child-tabs" id="childTabs"></div>
   <div class="board">
     <div class="section-nav" id="sectionNav">
-      <button class="section-btn" data-tab="today">📅 Hôm nay</button>
-      <button class="section-btn" data-tab="week">🗓️ Lịch tuần</button>
-      <button class="section-btn" data-tab="exams">📝 Sắp thi</button>
-      <button class="section-btn" data-tab="points">🏆 Điểm</button>
+      <button class="section-btn" data-tab="today" style="--tab-solid:#F5B400;--tab-tint:#FFF1C2;--tab-dark:#C99000;">📅 Hôm nay</button>
+      <button class="section-btn" data-tab="week" style="--tab-solid:#3B82C4;--tab-tint:#D2E7F7;--tab-dark:#28618f;">🗓️ Lịch tuần</button>
+      <button class="section-btn" data-tab="exams" style="--tab-solid:#E4574B;--tab-tint:#FBD8D4;--tab-dark:#b23e34;">📝 Sắp thi</button>
+      <button class="section-btn" data-tab="points" style="--tab-solid:#8B5CF0;--tab-tint:#E5D9FC;--tab-dark:#6a3fc2;">🏆 Điểm</button>
     </div>
     <div id="sectionContent"></div>
   </div>
@@ -801,7 +812,7 @@ function renderToday() {
   const pts = computePoints(data);
 
   let html = `<div style="text-align:right;font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;">🏆 Điểm hiện có: <strong style="color:var(--accent-dark);">${pts.balance}</strong></div>`;
-  html += '<div class="section-block" style="--block-bg:#FFF6E0;--block-border:#E8D08A;--block-ink:#8a6a1a;">';
+  html += '<div class="section-block" style="--block-bg:#F5B400;--block-shadow:#C99000;">';
   html += '<h2 class="section-title">🎯 Việc cần làm mỗi ngày</h2>';
   if (!data.dailyTasks || data.dailyTasks.length === 0) {
     html += '<p class="empty-note">Chưa có việc nào cần lặp lại mỗi ngày.</p>';
@@ -832,7 +843,7 @@ function renderToday() {
     </div>
   </div>`;
 
-  html += '</div><div class="section-block" style="--block-bg:#E9F3FA;--block-border:#B9D9EE;--block-ink:#2f6a8f;"><h2 class="section-title">📅 Lịch hôm nay</h2>';
+  html += '</div><div class="section-block" style="--block-bg:#3B82C4;--block-shadow:#28618f;"><h2 class="section-title">📅 Lịch hôm nay</h2>';
   if (todaysWeekly.length === 0) {
     html += '<p class="empty-note">Hôm nay không có lịch học thêm hay câu lạc bộ.</p>';
   } else {
@@ -851,7 +862,7 @@ function renderToday() {
     });
   }
 
-  html += '</div><div class="section-block" style="--block-bg:#EAF7EC;--block-border:#BEE0C4;--block-ink:#2f7a45;"><h2 class="section-title">✏️ Bài tập cần làm</h2>';
+  html += '</div><div class="section-block" style="--block-bg:#3FA65C;--block-shadow:#2c7a42;"><h2 class="section-title">✏️ Bài tập cần làm</h2>';
   if (todaysHomework.length === 0) {
     html += '<p class="empty-note">Chưa có bài tập nào được thêm.</p>';
   } else {
@@ -896,7 +907,7 @@ function renderToday() {
 
 function renderWeek() {
   const data = state.data[state.activeChild];
-  let html = '<div class="section-block" style="--block-bg:#EEF0FB;--block-border:#C9CEEF;--block-ink:#4b53a8;"><h2 class="section-title">🗓️ Lịch tuần &amp; bài tập</h2>';
+  let html = '<div class="section-block" style="--block-bg:#6C63D6;--block-shadow:#4e46a8;"><h2 class="section-title">🗓️ Lịch tuần &amp; bài tập</h2>';
 
   const byDay = {};
   for (let i = 1; i <= 7; i++) byDay[i] = [];
@@ -996,7 +1007,7 @@ function renderWeek() {
 function renderExams() {
   const data = state.data[state.activeChild];
   const sorted = [...data.exams].sort((a, b) => a.date.localeCompare(b.date));
-  let html = '<div class="section-block" style="--block-bg:#FBEAEA;--block-border:#EFC1C1;--block-ink:#a83f3f;"><h2 class="section-title">📝 Lịch thi sắp tới</h2>';
+  let html = '<div class="section-block" style="--block-bg:#E4574B;--block-shadow:#b23e34;"><h2 class="section-title">📝 Lịch thi sắp tới</h2>';
 
   if (sorted.length === 0) {
     html += '<p class="empty-note">Chưa có lịch thi nào được thêm.</p>';
@@ -1049,7 +1060,7 @@ function renderPoints() {
     <div class="points-sub">Đã kiếm: ${pts.earned} điểm · Đã đổi: ${pts.spent} điểm · Mỗi việc tick xong = +5 điểm</div>
   </div>`;
 
-  html += `<div class="section-block" style="--block-bg:#FFF6E0;--block-border:#E8D08A;--block-ink:#8a6a1a;"><h2 class="section-title">🏅 Thành tích tháng ${curMonth}</h2>`;
+  html += `<div class="section-block" style="--block-bg:#F5B400;--block-shadow:#C99000;"><h2 class="section-title">🏅 Thành tích tháng ${curMonth}</h2>`;
   if (monthItems.length === 0) {
     html += '<p class="empty-note">Tháng này chưa hoàn thành việc nào.</p>';
   } else {
@@ -1064,7 +1075,7 @@ function renderPoints() {
   }
   html += '</div>';
 
-  html += '<div class="section-block" style="--block-bg:#F4EAFB;--block-border:#DCBEEF;--block-ink:#7a3fa8;"><h2 class="section-title">🎁 Đổi điểm lấy thưởng</h2>';
+  html += '<div class="section-block" style="--block-bg:#8B5CF0;--block-shadow:#6a3fc2;"><h2 class="section-title">🎁 Đổi điểm lấy thưởng</h2>';
   if (rewards.length === 0) {
     html += '<p class="empty-note">Chưa có phần thưởng nào để đổi.</p>';
   } else {
@@ -1095,7 +1106,7 @@ function renderPoints() {
     </div>
   </div>`;
 
-  html += '<div class="section-block" style="--block-bg:#F1F0EA;--block-border:#DAD5C4;--block-ink:#6b6558;"><h2 class="section-title">🧾 Lịch sử đổi điểm</h2>';
+  html += '<div class="section-block" style="--block-bg:#5B6478;--block-shadow:#3f4657;"><h2 class="section-title">🧾 Lịch sử đổi điểm</h2>';
   if (history.length === 0) {
     html += '<p class="empty-note">Chưa đổi phần thưởng nào.</p>';
   } else {
