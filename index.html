@@ -564,6 +564,30 @@ function dowFromDate(dateStr) {
   return d === 0 ? 7 : d;
 }
 
+function currentMonthPrefix() {
+  return todayStr().slice(0, 7); // "YYYY-MM"
+}
+
+function computeMonthlyAchievements(data) {
+  const prefix = currentMonthPrefix();
+  const items = [];
+  (data.dailyTasks || []).forEach(dt => {
+    const count = (dt.doneDates || []).filter(d => d.startsWith(prefix)).length;
+    if (count > 0) items.push({ icon: subjectIcon(dt.subject), label: dt.subject, count, unit: 'lần' });
+  });
+  const hwCounts = {};
+  (data.homework || []).forEach(h => {
+    if (h.done && h.dueDate && h.dueDate.startsWith(prefix)) {
+      hwCounts[h.subject] = (hwCounts[h.subject] || 0) + 1;
+    }
+  });
+  Object.keys(hwCounts).forEach(subject => {
+    items.push({ icon: subjectIcon(subject), label: `Bài tập ${subject}`, count: hwCounts[subject], unit: 'bài' });
+  });
+  items.sort((a, b) => b.count - a.count);
+  return items;
+}
+
 function subjectIcon(text) {
   const s = (text || '').toLowerCase();
   const rules = [
@@ -1016,11 +1040,29 @@ function renderPoints() {
   const pts = computePoints(data);
   const rewards = data.rewards || [];
   const history = [...(data.redemptions || [])].sort((a, b) => b.date.localeCompare(a.date));
+  const monthItems = computeMonthlyAchievements(data);
+  const monthNames = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+  const curMonth = monthNames[new Date(todayStr()).getMonth()];
 
   let html = `<div class="points-banner">
     <div class="points-balance">🏆 ${pts.balance} điểm</div>
     <div class="points-sub">Đã kiếm: ${pts.earned} điểm · Đã đổi: ${pts.spent} điểm · Mỗi việc tick xong = +5 điểm</div>
   </div>`;
+
+  html += `<div class="section-block" style="--block-bg:#FFF6E0;--block-border:#E8D08A;--block-ink:#8a6a1a;"><h2 class="section-title">🏅 Thành tích tháng ${curMonth}</h2>`;
+  if (monthItems.length === 0) {
+    html += '<p class="empty-note">Tháng này chưa hoàn thành việc nào.</p>';
+  } else {
+    monthItems.forEach(it => {
+      html += `<div class="item-row">
+        <div class="item-text">
+          <div class="item-title">${it.icon} ${it.label}</div>
+        </div>
+        <span class="tag" style="background:#fff;color:#8a6a1a;border:1px solid #E8D08A;font-size:13px;">${it.count} ${it.unit}</span>
+      </div>`;
+    });
+  }
+  html += '</div>';
 
   html += '<div class="section-block" style="--block-bg:#F4EAFB;--block-border:#DCBEEF;--block-ink:#7a3fa8;"><h2 class="section-title">🎁 Đổi điểm lấy thưởng</h2>';
   if (rewards.length === 0) {
