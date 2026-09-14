@@ -466,6 +466,7 @@
       <button class="section-btn" data-tab="week" style="--tab-solid:#3B82C4;--tab-tint:#D2E7F7;--tab-dark:#28618f;">🗓️ Lịch tuần</button>
       <button class="section-btn" data-tab="exams" style="--tab-solid:#E4574B;--tab-tint:#FBD8D4;--tab-dark:#b23e34;">📝 Sắp thi</button>
       <button class="section-btn" data-tab="points" style="--tab-solid:#8B5CF0;--tab-tint:#E5D9FC;--tab-dark:#6a3fc2;">🏆 Điểm</button>
+      <button class="section-btn" data-tab="account" style="--tab-solid:#14B8A6;--tab-tint:#C7F2EC;--tab-dark:#0e8a7d;">🔑 Tài khoản</button>
     </div>
     <div id="sectionContent"></div>
   </div>
@@ -507,7 +508,8 @@ let state = {
   data: {}
 };
 
-let editingIds = { homework: null, weekly: null, exam: null, dailyTask: null, reward: null };
+let editingIds = { homework: null, weekly: null, exam: null, dailyTask: null, reward: null, account: null, link: null };
+let revealedPasswords = new Set();
 
 function uid() { return Math.random().toString(36).slice(2, 9); }
 
@@ -665,7 +667,9 @@ function defaultData(childId) {
       ],
       exams: [],
       rewards: defaultRewards(),
-      redemptions: []
+      redemptions: [],
+      accounts: [],
+      links: []
     };
   }
   // Katy - Lớp 5
@@ -684,7 +688,9 @@ function defaultData(childId) {
     ],
     exams: [],
     rewards: defaultRewards(),
-    redemptions: []
+    redemptions: [],
+    accounts: [],
+    links: []
   };
 }
 
@@ -696,6 +702,8 @@ function normalizeData(parsed) {
   if (!Array.isArray(parsed.dailyTasks)) parsed.dailyTasks = [];
   if (!Array.isArray(parsed.rewards)) parsed.rewards = defaultRewards();
   if (!Array.isArray(parsed.redemptions)) parsed.redemptions = [];
+  if (!Array.isArray(parsed.accounts)) parsed.accounts = [];
+  if (!Array.isArray(parsed.links)) parsed.links = [];
   return parsed;
 }
 
@@ -803,9 +811,7 @@ function countdownInfo(dateStr) {
 
 function renderToday() {
   const data = state.data[state.activeChild];
-  const dow = todayDow();
   const t = todayStr();
-  const todaysWeekly = data.weekly.filter(w => w.day === dow);
   const todaysHomework = data.homework
     .filter(h => !h.done || h.dueDate === t)
     .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
@@ -842,25 +848,6 @@ function renderToday() {
       <button class="btn-ghost" onclick="cancelForm('dailyTask')">Hủy</button>
     </div>
   </div>`;
-
-  html += '</div><div class="section-block" style="--block-bg:#3B82C4;--block-shadow:#28618f;"><h2 class="section-title">📅 Lịch hôm nay</h2>';
-  if (todaysWeekly.length === 0) {
-    html += '<p class="empty-note">Hôm nay không có lịch học thêm hay câu lạc bộ.</p>';
-  } else {
-    todaysWeekly.forEach(w => {
-      html += `<div class="item-row">
-        <div class="item-text">
-          <span class="tag ${w.type === 'CLB' ? 'club' : ''}">${typeIcon(w.type)} ${w.type}</span>
-          <span class="item-title">${subjectIcon(w.subject)} ${w.subject}</span>
-          <div class="item-meta">🕒 ${w.time}${w.note ? ' · ' + w.note : ''}</div>
-        </div>
-        <div class="row-actions">
-          <button class="edit-btn" onclick="editWeekly('${w.id}')">✏️</button>
-          <button class="del-btn" onclick="deleteItem('weekly','${w.id}')">✕</button>
-        </div>
-      </div>`;
-    });
-  }
 
   html += '</div><div class="section-block" style="--block-bg:#3FA65C;--block-shadow:#2c7a42;"><h2 class="section-title">✏️ Bài tập cần làm</h2>';
   if (todaysHomework.length === 0) {
@@ -1046,6 +1033,81 @@ function renderExams() {
   document.getElementById('sectionContent').innerHTML = html;
 }
 
+function renderAccounts() {
+  const data = state.data[state.activeChild];
+  const accounts = data.accounts || [];
+  const links = data.links || [];
+
+  let html = `<div class="section-block" style="--block-bg:#14B8A6;--block-shadow:#0e8a7d;"><h2 class="section-title">🔐 Tài khoản thi</h2>`;
+  if (accounts.length === 0) {
+    html += '<p class="empty-note">Chưa có tài khoản nào được thêm.</p>';
+  } else {
+    accounts.forEach(a => {
+      const shown = revealedPasswords.has(a.id);
+      html += `<div class="item-row">
+        <div class="item-text">
+          <div class="item-title">🔑 ${a.platform}</div>
+          <div class="item-meta">Tài khoản: ${a.username || '(chưa có)'}</div>
+          <div class="item-meta">Mật khẩu: <span style="font-family:monospace;">${shown ? (a.password || '(chưa có)') : '••••••••'}</span>
+            <button class="edit-btn" style="font-size:13px;" onclick="togglePasswordShow('${a.id}')">${shown ? '🙈 Ẩn' : '👁 Hiện'}</button>
+          </div>
+          ${a.note ? `<div class="item-meta">📝 ${a.note}</div>` : ''}
+        </div>
+        <div class="row-actions">
+          <button class="edit-btn" onclick="editAccount('${a.id}')">✏️</button>
+          <button class="del-btn" onclick="deleteItem('accounts','${a.id}')">✕</button>
+        </div>
+      </div>`;
+    });
+  }
+  html += '</div>';
+
+  html += `<button class="add-btn" onclick="startAdd('account')">+ Thêm tài khoản thi</button>
+  <div class="add-form" id="accountForm">
+    <div><label>Tên nền tảng / kỳ thi</label><input id="ac-platform" placeholder="VD: Hocmai, Violympic, IOE..."></div>
+    <div><label>Tài khoản đăng nhập</label><input id="ac-username" placeholder="VD: katep2019 hoặc email"></div>
+    <div><label>Mật khẩu</label><input id="ac-password" placeholder="Mật khẩu đăng nhập"></div>
+    <div><label>Ghi chú</label><input id="ac-note" placeholder="VD: Dùng cho vòng thi cấp trường"></div>
+    <div class="form-actions">
+      <button class="btn-primary" id="ac-save-btn" onclick="addAccount()">Lưu</button>
+      <button class="btn-ghost" onclick="cancelForm('account')">Hủy</button>
+    </div>
+  </div>`;
+
+  html += `<div class="section-block" style="--block-bg:#3B82C4;--block-shadow:#28618f;"><h2 class="section-title">🔗 Link học tập</h2>`;
+  if (links.length === 0) {
+    html += '<p class="empty-note">Chưa có link nào được thêm.</p>';
+  } else {
+    links.forEach(l => {
+      html += `<div class="item-row">
+        <div class="item-text">
+          <div class="item-title">🔗 <a href="${l.url}" target="_blank" rel="noopener" style="color:var(--accent-dark);">${l.name}</a></div>
+          <div class="item-meta" style="word-break:break-all;">${l.url}</div>
+          ${l.note ? `<div class="item-meta">📝 ${l.note}</div>` : ''}
+        </div>
+        <div class="row-actions">
+          <button class="edit-btn" onclick="editLink('${l.id}')">✏️</button>
+          <button class="del-btn" onclick="deleteItem('links','${l.id}')">✕</button>
+        </div>
+      </div>`;
+    });
+  }
+  html += '</div>';
+
+  html += `<button class="add-btn" onclick="startAdd('link')">+ Thêm link học tập</button>
+  <div class="add-form" id="linkForm">
+    <div><label>Tên trang</label><input id="lk-name" placeholder="VD: Hocmai, Violympic..."></div>
+    <div><label>Đường link</label><input id="lk-url" placeholder="VD: hocmai.vn"></div>
+    <div><label>Ghi chú</label><input id="lk-note" placeholder="VD: Nơi làm bài tập online"></div>
+    <div class="form-actions">
+      <button class="btn-primary" id="lk-save-btn" onclick="addLink()">Lưu</button>
+      <button class="btn-ghost" onclick="cancelForm('link')">Hủy</button>
+    </div>
+  </div>`;
+
+  document.getElementById('sectionContent').innerHTML = html;
+}
+
 function renderPoints() {
   const data = state.data[state.activeChild];
   const pts = computePoints(data);
@@ -1126,6 +1188,7 @@ function renderSection() {
   if (state.activeTab === 'today') renderToday();
   else if (state.activeTab === 'week') renderWeek();
   else if (state.activeTab === 'points') renderPoints();
+  else if (state.activeTab === 'account') renderAccounts();
   else renderExams();
 }
 
@@ -1149,6 +1212,8 @@ function formIdFor(type, prefix) {
   if (type === 'exam') return 'examForm';
   if (type === 'dailyTask') return 'dailyTaskForm';
   if (type === 'reward') return 'rewardForm';
+  if (type === 'account') return 'accountForm';
+  if (type === 'link') return 'linkForm';
 }
 
 function saveBtnIdFor(type, prefix) {
@@ -1157,6 +1222,8 @@ function saveBtnIdFor(type, prefix) {
   if (type === 'exam') return 'ex-save-btn';
   if (type === 'dailyTask') return 'dt-save-btn';
   if (type === 'reward') return 'rw-save-btn';
+  if (type === 'account') return 'ac-save-btn';
+  if (type === 'link') return 'lk-save-btn';
 }
 
 function setSaveLabel(type, prefix, editing) {
@@ -1193,6 +1260,17 @@ function resetFormFields(type, prefix) {
     document.getElementById('rw-name').value = '';
     document.getElementById('rw-cost').value = 20;
     editingIds.reward = null;
+  } else if (type === 'account') {
+    document.getElementById('ac-platform').value = '';
+    document.getElementById('ac-username').value = '';
+    document.getElementById('ac-password').value = '';
+    document.getElementById('ac-note').value = '';
+    editingIds.account = null;
+  } else if (type === 'link') {
+    document.getElementById('lk-name').value = '';
+    document.getElementById('lk-url').value = '';
+    document.getElementById('lk-note').value = '';
+    editingIds.link = null;
   }
   setSaveLabel(type, prefix, false);
 }
@@ -1288,6 +1366,37 @@ function editReward(id) {
   openFormExclusive('rewardForm');
 }
 
+function editAccount(id) {
+  const data = state.data[state.activeChild];
+  const item = (data.accounts || []).find(a => a.id === id);
+  if (!item) return;
+  document.getElementById('ac-platform').value = item.platform;
+  document.getElementById('ac-username').value = item.username || '';
+  document.getElementById('ac-password').value = item.password || '';
+  document.getElementById('ac-note').value = item.note || '';
+  editingIds.account = id;
+  setSaveLabel('account', null, true);
+  openFormExclusive('accountForm');
+}
+
+function editLink(id) {
+  const data = state.data[state.activeChild];
+  const item = (data.links || []).find(l => l.id === id);
+  if (!item) return;
+  document.getElementById('lk-name').value = item.name;
+  document.getElementById('lk-url').value = item.url;
+  document.getElementById('lk-note').value = item.note || '';
+  editingIds.link = id;
+  setSaveLabel('link', null, true);
+  openFormExclusive('linkForm');
+}
+
+function togglePasswordShow(id) {
+  if (revealedPasswords.has(id)) revealedPasswords.delete(id);
+  else revealedPasswords.add(id);
+  renderSection();
+}
+
 async function addReward() {
   const name = document.getElementById('rw-name').value.trim();
   const cost = parseInt(document.getElementById('rw-cost').value, 10);
@@ -1304,6 +1413,48 @@ async function addReward() {
   await saveChild(state.activeChild);
   soundPop();
   document.getElementById('rewardForm').classList.remove('open');
+  renderSection();
+}
+
+async function addAccount() {
+  const platform = document.getElementById('ac-platform').value.trim();
+  const username = document.getElementById('ac-username').value.trim();
+  const password = document.getElementById('ac-password').value.trim();
+  const note = document.getElementById('ac-note').value.trim();
+  if (!platform) return;
+  const data = state.data[state.activeChild];
+  data.accounts = data.accounts || [];
+  if (editingIds.account) {
+    const item = data.accounts.find(a => a.id === editingIds.account);
+    if (item) { item.platform = platform; item.username = username; item.password = password; item.note = note; }
+    editingIds.account = null;
+  } else {
+    data.accounts.push({ id: uid(), platform, username, password, note });
+  }
+  await saveChild(state.activeChild);
+  soundPop();
+  document.getElementById('accountForm').classList.remove('open');
+  renderSection();
+}
+
+async function addLink() {
+  let url = document.getElementById('lk-url').value.trim();
+  const name = document.getElementById('lk-name').value.trim();
+  const note = document.getElementById('lk-note').value.trim();
+  if (!name || !url) return;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  const data = state.data[state.activeChild];
+  data.links = data.links || [];
+  if (editingIds.link) {
+    const item = data.links.find(l => l.id === editingIds.link);
+    if (item) { item.name = name; item.url = url; item.note = note; }
+    editingIds.link = null;
+  } else {
+    data.links.push({ id: uid(), name, url, note });
+  }
+  await saveChild(state.activeChild);
+  soundPop();
+  document.getElementById('linkForm').classList.remove('open');
   renderSection();
 }
 
