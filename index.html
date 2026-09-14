@@ -192,6 +192,19 @@
 
   .item-row:last-child { border-bottom: none; }
 
+  .schedule-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    border-left: 5px solid var(--sb-accent, var(--accent-dark));
+    background: var(--sb-bg, #FFF3DC);
+  }
+
+  .schedule-box:last-child { margin-bottom: 8px; }
+
   .check {
     width: 34px;
     height: 34px;
@@ -911,9 +924,10 @@ function renderWeek() {
     html += `<div class="week-day-group"><div class="week-day-label">${DAY_LABELS[i-1]}${i === todayDow() ? ' · hôm nay' : ''}</div>`;
     byDay[i].forEach(item => {
       if (item.kind === 'weekly') {
-        html += `<div class="item-row">
+        const isClub = item.type === 'CLB';
+        html += `<div class="schedule-box" style="--sb-bg:${isClub ? '#E3F5E8' : '#FFF3DC'};--sb-accent:${isClub ? '#2f6e51' : '#b97a1f'};">
           <div class="item-text">
-            <span class="tag ${item.type === 'CLB' ? 'club' : ''}">${typeIcon(item.type)} ${item.type}</span>
+            <span class="tag ${isClub ? 'club' : ''}">${typeIcon(item.type)} ${item.type}</span>
             <span class="item-title">${subjectIcon(item.subject)} ${item.subject}</span>
             <div class="item-meta">🕒 ${item.time}${item.note ? ' · ' + item.note : ''}</div>
           </div>
